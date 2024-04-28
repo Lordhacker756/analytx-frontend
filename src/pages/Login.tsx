@@ -3,18 +3,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
-  // @ts-ignore
-  const [userEmail, setUserEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const history = useHistory();
+  const [userEmail, setUserEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
 
   const handleLogin = async () => {
+    if (!userEmail || !password) {
+      setErrorMessage("Please fill out both email and password fields.");
+      return;
+    }
+
+    if (!validateEmail(userEmail)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
     try {
       const res = await axios.post("http://localhost:8080/api/v1/auth/login", {
         email: userEmail,
@@ -99,9 +112,12 @@ export default function Login() {
         </form>
         <p className="text-center text-sm text-gray-400">
           Don't have an account?
-          <a className="font-medium text-gray-400 hover:underline" href="#">
+          <Link
+            className="font-medium text-gray-400 hover:underline"
+            to="/register"
+          >
             Sign up
-          </a>
+          </Link>
         </p>
       </div>
       <ToastContainer
