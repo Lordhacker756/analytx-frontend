@@ -21,6 +21,7 @@ export const Punctuality = () => {
       internName,
       rating1: parseFloat(planningAndProblemSolving),
     };
+    console.log(data);
     const authToken = localStorage.getItem("authToken");
     fetch("http://localhost:8080/api/v1/user/submit-punctuality", {
       method: "POST",
@@ -38,6 +39,7 @@ export const Punctuality = () => {
       })
       .then((data) => {
         console.log("Success:", data);
+        window.alert("Punctuality form submitted successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -56,6 +58,13 @@ export const Punctuality = () => {
     { value: "5", label: "5 Stars" },
   ];
 
+  // Define options for intern names
+  const internOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
+
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
       <div className="mx-auto max-w-2xl">
@@ -72,14 +81,30 @@ export const Punctuality = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <input
-                type="text"
+              <Select
                 id="intern-name"
                 value={internName}
-                onChange={(e) => setInternName(e.target.value)}
+                onValueChange={(value) => setInternName(value)}
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
-                placeholder="Enter Intern Name"
-              />
+              >
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select intern name"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {internOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label

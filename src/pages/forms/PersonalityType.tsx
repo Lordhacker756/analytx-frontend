@@ -37,11 +37,26 @@ export const PersonalityType = () => {
       })
       .then((data) => {
         console.log("Success:", data);
+        window.alert("Personality Type form submitted successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
+
+  const internOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
+
+  const personalityTypeOptions = [
+    { value: "Type 1", label: "Type 1" },
+    { value: "Type 2", label: "Type 2" },
+    { value: "Type 3", label: "Type 3" },
+    { value: "Type 4", label: "Type 4" },
+    { value: "Type 5", label: "Type 5" },
+  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -61,14 +76,28 @@ export const PersonalityType = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <input
-                type="text"
+              <Select
                 id="intern-name"
-                value={internName}
-                onChange={(e) => setInternName(e.target.value)}
-                className="bg-gray-800 text-gray-50 w-full p-2 rounded"
-                placeholder="Enter Intern Name"
-              />
+                onValueChange={(value) => setInternName(value)}
+              >
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select intern name"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {internOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-gray-50" htmlFor="personality-type">
@@ -85,21 +114,15 @@ export const PersonalityType = () => {
                   />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 text-gray-50">
-                  <SelectItem className="hover:bg-gray-700" value="Type 1">
-                    Type 1
-                  </SelectItem>
-                  <SelectItem className="hover:bg-gray-700" value="Type 2">
-                    Type 2
-                  </SelectItem>
-                  <SelectItem className="hover:bg-gray-700" value="Type 3">
-                    Type 3
-                  </SelectItem>
-                  <SelectItem className="hover:bg-gray-700" value="Type 4">
-                    Type 4
-                  </SelectItem>
-                  <SelectItem className="hover:bg-gray-700" value="Type 5">
-                    Type 5
-                  </SelectItem>
+                  {personalityTypeOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

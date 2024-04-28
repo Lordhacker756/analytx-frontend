@@ -44,11 +44,18 @@ export const TeamTask = () => {
       })
       .then((data) => {
         console.log("Success:", data);
+        window.alert("Team Task form submitted successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
+
+  const internOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
 
   const ratingOptions = [
     { value: "1", label: "1 Star" },
@@ -78,14 +85,28 @@ export const TeamTask = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <input
-                type="text"
+              <Select
                 id="intern-name"
-                value={internName}
-                onChange={(e) => setInternName(e.target.value)}
-                className="bg-gray-800 text-gray-50 w-full p-2 rounded"
-                placeholder="Enter Intern Name"
-              />
+                onValueChange={(value) => setInternName(value)}
+              >
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select intern name"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {internOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-gray-50" htmlFor="research-skills">
@@ -102,17 +123,15 @@ export const TeamTask = () => {
                   />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 text-gray-50">
-                  {Array.from({ length: 10 }, (_, i) => i / 2 + 0.5).map(
-                    (value) => (
-                      <SelectItem
-                        className="hover:bg-gray-700"
-                        value={value}
-                        key={value}
-                      >
-                        {value}
-                      </SelectItem>
-                    )
-                  )}
+                  {ratingOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -155,36 +174,6 @@ export const TeamTask = () => {
                   <SelectValue
                     className="text-gray-50"
                     placeholder="Select communication skills"
-                  />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 text-gray-50">
-                  {ratingOptions.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      className="hover:bg-gray-700"
-                      value={option.value}
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label
-                className="text-gray-50"
-                htmlFor="planning-and-problem-solving"
-              >
-                Planning and Problem Solving
-              </Label>
-              <Select
-                id="planning-and-problem-solving"
-                onValueChange={(value) => setPlanningAndProblemSolving(value)}
-              >
-                <SelectTrigger className="bg-gray-800 text-gray-50">
-                  <SelectValue
-                    className="text-gray-50"
-                    placeholder="Select planning and problem solving skills"
                   />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-800 text-gray-50">

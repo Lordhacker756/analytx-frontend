@@ -45,6 +45,7 @@ export const GroupDiscussion = () => {
       })
       .then((data) => {
         console.log("Success:", data);
+        window.alert("Group Discussion form submitted successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -61,6 +62,12 @@ export const GroupDiscussion = () => {
     { value: "4", label: "4 Stars" },
     { value: "4.5", label: "4.5 Stars" },
     { value: "5", label: "5 Stars" },
+  ];
+
+  const internOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
   ];
 
   return (
@@ -81,14 +88,28 @@ export const GroupDiscussion = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <input
-                type="text"
+              <Select
                 id="intern-name"
-                value={internName}
-                onChange={(e) => setInternName(e.target.value)}
-                className="bg-gray-800 text-gray-50 w-full p-2 rounded"
-                placeholder="Enter Intern Name"
-              />
+                onValueChange={(value) => setInternName(value)}
+              >
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select intern name"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {internOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-gray-50" htmlFor="rating1">

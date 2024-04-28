@@ -94,13 +94,16 @@ const InternAnalytics = () => {
       <div>
         <div className="flex flex-col items-center justify-center gap-3 space-x-2">
           <h2 className="text-lg font-medium">Get intern analytics</h2>
-          <input
+          <select
             className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-            placeholder="Enter intern name"
-            type="text"
             value={internName}
             onChange={(e) => setInternName(e.target.value)}
-          />
+          >
+            <option value="">Select intern name</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
         </div>
         <button
           onClick={fetchAnalyticsData}

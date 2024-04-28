@@ -30,11 +30,18 @@ export const PersonalSuggestion = () => {
       })
       .then((data) => {
         console.log("Success:", data);
+        window.alert("Personal Suggestion form submitted successfully");
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
+
+  const internOptions = [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -54,14 +61,21 @@ export const PersonalSuggestion = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <input
-                type="text"
+              <select
                 id="intern-name"
                 value={internName}
                 onChange={(e) => setInternName(e.target.value)}
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
-                placeholder="Enter Intern Name"
-              />
+              >
+                <option value="" disabled>
+                  Select Intern Name
+                </option>
+                {internOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <Label className="text-gray-50" htmlFor="personal-description">
