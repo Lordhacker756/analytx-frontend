@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   return (
-   !authenticated ? <InternAnalytics /> : <Register />
+   !authenticated ? <RateIntern /> : <Register />
   )
 }
 
