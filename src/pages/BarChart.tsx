@@ -1,39 +1,71 @@
-import { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-const BarChart = ({ jsonData }) => {
-    const [chartData, setChartData] = useState({});
+import { Bar } from "react-chartjs-2";
 
-    const formatDataForChart = () => {
-        const labels = Object.keys(jsonData.chartData);
-        const ratings = Object.values(jsonData.chartData);
+const BarChart = (jsonData) => {
+  const [chartLables, setChartLabels] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
-        const formattedData = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Rating (0-5)',
-                    data: ratings,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color for bars
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }
-            ]
-        };
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
-        setChartData(formattedData);
-    };
+  const formattedData = () => {
+    console.log("Chart data recieved", jsonData);
+    console.log("Labels: ", Object.keys(jsonData.jsonData.chartData));
+    setChartLabels(Object.keys(jsonData.jsonData.chartData));
+    console.log("Data: ", Object.values(jsonData.jsonData.chartData));
+    setChartData(Object.values(jsonData.jsonData.chartData));
+  };
 
-    // Format the data when the component mounts
-    useEffect(() => {
-        formatDataForChart();
-    }, []);
+  useEffect(() => {
+    formattedData();
+  }, []);
 
-    return (
-        <div className="h-[350px]">
-            <Bar data={chartData} />
-        </div>
-    );
+  const data = {
+    labels: chartLables,
+    datasets: [
+      {
+        label: "Rating (0-5)",
+        data: chartData, // Example ratings for each attribute
+        backgroundColor: "rgba(54, 162, 235, 0.5)", // Blue color for bars
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: true,
+
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 5,
+      },
+    },
+  };
+
+  return (
+    <div className={" h-[350px]"}>
+      <Bar data={data} options={options} />
+    </div>
+  );
 };
 
 export default BarChart;

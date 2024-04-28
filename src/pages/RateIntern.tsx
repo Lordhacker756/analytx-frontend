@@ -10,9 +10,11 @@ import {Punctuality} from "@/pages/forms/Punctuality.tsx";
 import {Attendance} from "@/pages/forms/Attendance.tsx";
 import {PersonalityType} from "@/pages/forms/PersonalityType.tsx";
 import {PersonalSuggestion} from "@/pages/forms/PersonalSuggestion.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Link} from "react-router-dom";
 
 export function RateIntern() {
-    const [selectedForm, setSelectedForm] = useState<number | null>(null);
+    const [selectedForm, setSelectedForm] = useState<number | null>(1);
 
     return (
         <div className="flex flex-col min-h-screen w-full dark:bg-gray-900 md:flex-row">
@@ -64,6 +66,24 @@ export function RateIntern() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <div
+                        className={'flex flex-col gap-2'}
+                    >
+                    <Button
+                    >
+                        <Link to={'/analytics'}>
+                            Intern Analytics
+                        </Link>
+                    </Button>
+
+                    <Button
+                        onClick={()=>{
+                            localStorage.removeItem("authToken")
+                        }}
+                    >
+                        Logout
+                    </Button>
+                    </div>
                 </div>
             </div>
             {

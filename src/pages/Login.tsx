@@ -11,11 +11,20 @@ export default function Login() {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const handleLogin = async () => {
-        const res = await axios.post("http://localhost:8080/api/v1/auth/login", {
-            email: userEmail,
-            password: password
-        });
-        console.log("RESPONSE::", res.data);
+
+        try{
+            const res = await axios.post("http://localhost:8080/api/v1/auth/login", {
+                email: userEmail,
+                password: password
+            });
+            localStorage.setItem("authToken", res.data.token);
+
+            console.log("RESPONSE::", res.data);
+        }
+       catch{
+            localStorage.removeItem("authToken");
+            setErrorMessage("Email or password is incorrect")
+       }
     }
 
 
