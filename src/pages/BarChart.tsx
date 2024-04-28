@@ -51,7 +51,8 @@ const BarChart = (jsonData) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
+    aspectRatio: 1,
 
     scales: {
       y: {
@@ -62,7 +63,7 @@ const BarChart = (jsonData) => {
   };
 
   return (
-    <div className={" h-[350px]"}>
+    <div className={" h-[50vh] w-[60vw]"}>
       <Bar data={data} options={options} />
     </div>
   );
