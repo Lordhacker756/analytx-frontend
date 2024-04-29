@@ -9,27 +9,22 @@ import {
 } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { TeachATopicDTO } from "@/types/FormDTO";
 
 export const TeachATopic = () => {
-  const [internName, setInternName] = useState("");
-  const [rating1, setRating1] = useState("");
-  const [rating2, setRating2] = useState("");
-  const [rating3, setRating3] = useState("");
-  const [rating4, setRating4] = useState("");
-  const [URL, setURL] = useState("");
-  const [remark, setRemark] = useState("");
+  const [formData, setFormData] = useState<TeachATopicDTO>({
+    internName: "",
+    rating1: 0,
+    rating2: 0,
+    rating3: 0,
+    rating4: 0,
+    URL: "",
+    remark: "",
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = {
-      internName,
-      rating1: parseFloat(rating1),
-      rating2: parseFloat(rating2),
-      rating3: parseFloat(rating3),
-      rating4: parseFloat(rating4),
-      URL,
-      remark,
-    };
+
     const authToken = localStorage.getItem("authToken");
     fetch("http://localhost:8080/api/v1/user/submit-teach-a-topic", {
       method: "POST",
@@ -37,7 +32,7 @@ export const TeachATopic = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     })
       .then((response) => {
         if (!response.ok) {
@@ -90,7 +85,12 @@ export const TeachATopic = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => ({
+                    ...data,
+                    internName: value,
+                  }))
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -115,7 +115,17 @@ export const TeachATopic = () => {
               <Label className="text-gray-50" htmlFor="rating1">
                 Responsibility
               </Label>
-              <Select id="rating1" onValueChange={(value) => setRating1(value)}>
+              <Select
+                id="rating1"
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: value,
+                    };
+                  })
+                }
+              >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
                     className="text-gray-50"
@@ -139,7 +149,12 @@ export const TeachATopic = () => {
               <Label className="text-gray-50" htmlFor="rating2">
                 Research Skills
               </Label>
-              <Select id="rating2" onValueChange={(value) => setRating2(value)}>
+              <Select
+                id="rating2"
+                onValueChange={(value) =>
+                  setFormData((data) => ({ ...data, rating2: value }))
+                }
+              >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
                     className="text-gray-50"
@@ -163,7 +178,12 @@ export const TeachATopic = () => {
               <Label className="text-gray-50" htmlFor="rating3">
                 Quality of Work
               </Label>
-              <Select id="rating3" onValueChange={(value) => setRating3(value)}>
+              <Select
+                id="rating3"
+                onValueChange={(value) =>
+                  setFormData((data) => ({ ...data, rating3: value }))
+                }
+              >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
                     className="text-gray-50"
@@ -187,7 +207,15 @@ export const TeachATopic = () => {
               <Label className="text-gray-50" htmlFor="rating4">
                 Communication Skills
               </Label>
-              <Select id="rating4" onValueChange={(value) => setRating4(value)}>
+              <Select
+                id="rating4"
+                onValueChange={(value) =>
+                  setFormData((data) => ({
+                    ...data,
+                    rating4: value,
+                  }))
+                }
+              >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
                     className="text-gray-50"
@@ -214,8 +242,16 @@ export const TeachATopic = () => {
               <input
                 type="text"
                 id="URL"
-                value={URL}
-                onChange={(e) => setURL(e.target.value)}
+                value={formData.URL}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setFormData((val) => {
+                    return {
+                      ...val,
+                      URL: e.target.value,
+                    };
+                  });
+                }}
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
                 placeholder="Enter URL"
               />
@@ -227,8 +263,15 @@ export const TeachATopic = () => {
               <Textarea
                 className="bg-gray-800 text-gray-50"
                 id="remark"
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
+                value={formData.remark}
+                onChange={(e) => {
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      remark: e.target.value,
+                    };
+                  });
+                }}
                 placeholder="Enter your remark"
                 rows={3}
               />
