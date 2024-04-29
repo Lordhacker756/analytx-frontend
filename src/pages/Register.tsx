@@ -6,15 +6,23 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axiosInstance from "@/api/host";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(password);
   };
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,16 +31,44 @@ export default function Register() {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
+    if (!validatePassword(password)) {
+      let passwordError = "Password must ";
+      if (!/(?=.*[a-z])/.test(password)) {
+        passwordError += "contain at least one lowercase letter, ";
+      }
+      if (!/(?=.*[A-Z])/.test(password)) {
+        passwordError += "contain at least one uppercase letter, ";
+      }
+      if (!/(?=.*\d)/.test(password)) {
+        passwordError += "contain at least one number, ";
+      }
+      if (!/(?=.*[@$!%*?&])/.test(password)) {
+        passwordError += "contain at least one special character, ";
+      }
+      if (password.length < 8) {
+        passwordError += "be at least 8 characters long, ";
+      }
+      passwordError = passwordError.slice(0, -2); // remove the trailing comma and space
+      setErrorMessage(passwordError);
+      return;
+    }
 
     try {
-      const res = await axios.post(
-        "http://localhost:8080/api/v1/auth/register",
-        {
-          email: email,
-          password: password,
-        }
-      );
+      await axiosInstance.post("auth/register", {
+        email: email,
+        password: password,
+      });
+
       window.alert("Signup successful, Login🎆");
+
+      const loginRes = await axiosInstance.post("auth/login", {
+        email: email,
+        password: password,
+      });
+
+      localStorage.setItem("authToken", loginRes.data.token);
+      window.location.href = "/rate";
+
       window.location.href = "/login";
       toast("Logged-In successfully!🎆", {
         position: "top-right",
@@ -44,11 +80,10 @@ export default function Register() {
         progress: undefined,
         theme: "dark",
       });
-
-      console.log("RESPONSE::", res.data);
-    } catch {
+    } catch (error) {
       localStorage.removeItem("authToken");
-      setErrorMessage("Email or password is incorrect");
+      console.log("ERROR:: ", error?.message);
+      setErrorMessage("Internal Server Error");
     }
   };
 
@@ -82,10 +117,13 @@ export default function Register() {
                 Password
               </Label>
               <Button
-                className="absolute bottom-1 right-1 h-7 w-7"
+                className="text-gray-400"
                 size="icon"
                 variant="ghost"
-              ></Button>
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </Button>
             </div>
             <Input
               className="bg-gray-800 text-white"
@@ -93,8 +131,13 @@ export default function Register() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              type={showPassword ? "text" : "password"}
             />
+            <p className="text-[8px] text-gray-400">
+              Password must contain at least one uppercase letter, one lowercase
+              letter, one number, one special character, and be at least 8
+              characters long.
+            </p>
           </div>
           <Button
             className="w-full bg-gray-800 text-white hover:bg-gray-700"
