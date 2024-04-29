@@ -32,9 +32,10 @@ Analytx Frontend provides a user-friendly interface for interacting with the Ana
 - **Vite**: Frontend build tool for fast and efficient development.
 - **React.js**: JavaScript library for building user interfaces.
 - **Tailwind CSS**: Utility-first CSS framework for styling the frontend components.
+- **Shadcn UI**: For building streamlined scaleable components.
 - **JWT Authentication**: Secure authentication mechanism for accessing the frontend.
   
-## Getting Started
+## Getting Started Without Docker 
 
 To run Analytx Frontend locally, follow these steps:
 
@@ -65,6 +66,12 @@ yarn dev
 5. Once the server is up and running, access Analytx Frontend at `http://localhost:3000`.
 
 6. Ensure the Analytx backend is also running locally to interact with the frontend seamlessly.
+
+## Getting started with Docker and Docker Hub🐋
+
+1. Go to [Analytx-Backend](https://github.com/Lordhacker756/analytx) and simply run `docker-compose up -d`. The app will be available on `http://localhost:3000`
+
+2. You can also build the image locally using the command `docker build --pull --rm -f "Dockerfile" -t rudra708/analytx-frontend:latest "."` and then run `docker-compose up -d` in the backend.
 
 ## Contributing
 
