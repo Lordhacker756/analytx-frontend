@@ -1,3 +1,4 @@
+// Frontend Changes
 import { useState } from "react";
 import { Label } from "@/components/ui/label.tsx";
 import {
@@ -17,6 +18,8 @@ export const TeamTask = () => {
   const [communicationSkills, setCommunicationSkills] = useState("");
   const [planningAndProblemSolving, setPlanningAndProblemSolving] =
     useState("");
+  const [URL, setURL] = useState("");
+  const [remark, setRemark] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,6 +29,8 @@ export const TeamTask = () => {
       rating2: parseFloat(qualityOfWork),
       rating3: parseFloat(communicationSkills),
       rating4: parseFloat(planningAndProblemSolving),
+      URL,
+      remark,
     };
     const authToken = localStorage.getItem("authToken");
     fetch("http://localhost:8080/api/v1/user/submit-team-task", {
@@ -188,6 +193,33 @@ export const TeamTask = () => {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            {/* New Input for URL */}
+            <div>
+              <Label className="text-gray-50" htmlFor="url">
+                URL
+              </Label>
+              <input
+                id="url"
+                type="text"
+                className="bg-gray-800 text-gray-50 w-full px-3 py-2 rounded-md"
+                placeholder="Enter URL"
+                value={URL}
+                onChange={(e) => setURL(e.target.value)}
+              />
+            </div>
+            {/* New Textarea for Remark */}
+            <div>
+              <Label className="text-gray-50" htmlFor="remark">
+                Remark
+              </Label>
+              <Textarea
+                id="remark"
+                className="bg-gray-800 text-gray-50 w-full rounded-md"
+                placeholder="Enter remark"
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
+              />
             </div>
             <Button
               className="w-full bg-gray-900 text-gray-50 hover:bg-gray-800 border border-white"
