@@ -1,30 +1,75 @@
-# React + TypeScript + Vite
+# Analytx Frontend 📊
+## The perfect frontend interface for Analytx - the collective intern analysis tool!
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Analytx Frontend provides a user-friendly interface for interacting with the Analytx backend system. It allows employees to seamlessly rate interns across various domains, view detailed reports, and manage intern evaluations with ease.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Intuitive User Interface**: Analytx Frontend offers a clean and intuitive interface for effortless navigation and interaction.
+- **Multi-Domain Evaluation**: Users can rate interns across eight different domains, providing comprehensive feedback.
+- **Personal Remarks**: Include personal remarks alongside ratings to provide additional context and insights.
+- **Visual Reports**: Analytx Frontend generates detailed reports with interactive charts, offering visual representations of intern performance.
+- **Individual Score Details**: Access a table with individual scores and all feedback for in-depth analysis of each intern's performance.
+- **Secure Authentication**: Implements JWT authentication for secure access to the system, ensuring data privacy.
 
-## Expanding the ESLint configuration
+## Pages
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+<img src="src/assets/login.png" >
+<img src="src/assets/register.png" >
+<img src="src/assets/analytx_rating.png" >
+<img src="src/assets/analytx_bar_chart.png" >
+<img src="src/assets/analytx_table.png" >
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+  
+## Upcoming features
+
+- **PDF Download**: Download reports as PDF for offline viewing and sharing.
+- **Email Integration**: Send reports directly to email addresses for convenient distribution.
+
+## Technologies Used
+
+- **Vite**: Frontend build tool for fast and efficient development.
+- **React.js**: JavaScript library for building user interfaces.
+- **Tailwind CSS**: Utility-first CSS framework for styling the frontend components.
+- **JWT Authentication**: Secure authentication mechanism for accessing the frontend.
+  
+## Getting Started
+
+To run Analytx Frontend locally, follow these steps:
+
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
+
+```bash
+git clone https://github.com/Lordhacker756/analytx-frontend
+cd analytx-frontend
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+3. Install dependencies using npm or yarn.
+
+```bash
+npm install
+# or
+yarn install
+```
+
+4. Start the development server.
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+5. Once the server is up and running, access Analytx Frontend at `http://localhost:3000`.
+
+6. Ensure the Analytx backend is also running locally to interact with the frontend seamlessly.
+
+## Contributing
+
+Contributions to Analytx Frontend are welcome! If you encounter any issues or have suggestions for improvements, please feel free to submit a pull request or open an issue on the GitHub repository.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

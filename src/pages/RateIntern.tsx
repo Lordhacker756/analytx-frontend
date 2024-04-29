@@ -83,6 +83,14 @@ export function RateIntern() {
             <Button>
               <Link to={"/analytics"}>Intern Analytics</Link>
             </Button>
+            <Button>
+              <a
+                href="http://localhost:8080/swagger-ui/index.html#/"
+                target="_blank"
+              >
+                Swagger UI
+              </a>
+            </Button>
 
             <Button
               onClick={() => {
