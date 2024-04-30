@@ -2,31 +2,33 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { PersonalSuggestionDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { internOptions } from "@/constants/internOptions";
 
 export const PersonalSuggestion = () => {
-  const [internName, setInternName] = useState("");
-  const [personalDescription, setPersonalDescription] = useState("");
+  const [formData, setFormData] = useState<PersonalSuggestionDTO>({
+    internName: "",
+    personalDescription: "",
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = {
-      internName,
-      personalDescription,
-    };
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-personal-description", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+
+    axiosInstance
+      .post("user/submit-personal-description", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -36,12 +38,6 @@ export const PersonalSuggestion = () => {
         console.error("Error:", error);
       });
   };
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -61,21 +57,35 @@ export const PersonalSuggestion = () => {
               <Label className="text-gray-50" htmlFor="intern-name">
                 Intern Name
               </Label>
-              <select
+              <Select
                 id="intern-name"
-                value={internName}
-                onChange={(e) => setInternName(e.target.value)}
-                className="bg-gray-800 text-gray-50 w-full p-2 rounded"
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
-                <option value="" disabled>
-                  Select Intern Name
-                </option>
-                {internOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select intern name"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {internOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-gray-50" htmlFor="personal-description">
@@ -84,8 +94,15 @@ export const PersonalSuggestion = () => {
               <Textarea
                 className="bg-gray-800 text-gray-50"
                 id="personal-description"
-                value={personalDescription}
-                onChange={(e) => setPersonalDescription(e.target.value)}
+                value={formData.personalDescription}
+                onChange={(e) =>
+                  setFormData((value) => {
+                    return {
+                      ...value,
+                      personalDescription: e.target.value,
+                    };
+                  })
+                }
                 placeholder="Enter your suggestion"
                 rows={5}
               />

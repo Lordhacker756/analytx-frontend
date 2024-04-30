@@ -7,35 +7,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { PunctualityDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const Punctuality = () => {
-  const [internName, setInternName] = useState("");
-  const [planningAndProblemSolving, setPlanningAndProblemSolving] =
-    useState("");
+  const [formData, setFormData] = useState<PunctualityDTO>({
+    internName: "",
+    rating1: 0,
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = {
-      internName,
-      rating1: parseFloat(planningAndProblemSolving),
-    };
-    console.log(data);
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-punctuality", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+
+    axiosInstance
+      .post("user/submit-punctuality", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -45,25 +38,6 @@ export const Punctuality = () => {
         console.error("Error:", error);
       });
   };
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
-
-  // Define options for intern names
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -83,8 +57,15 @@ export const Punctuality = () => {
               </Label>
               <Select
                 id="intern-name"
-                value={internName}
-                onValueChange={(value) => setInternName(value)}
+                value={formData.internName}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
@@ -115,7 +96,14 @@ export const Punctuality = () => {
               </Label>
               <Select
                 id="planning-and-problem-solving"
-                onValueChange={(value) => setPlanningAndProblemSolving(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue

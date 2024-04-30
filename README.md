@@ -71,7 +71,7 @@ yarn dev
 
 1. Go to [Analytx-Backend](https://github.com/Lordhacker756/analytx) and simply run `docker-compose up -d`. The app will be available on `http://localhost:3000`
 
-2. You can also build the image locally using the command `docker build --pull --rm -f "Dockerfile" -t rudra708/analytx-frontend:latest "."` and then run `docker-compose up -d` in the backend.
+2. You can also build the image locally using the command `npm run build-image` and then run `docker-compose up -d` in the backend.
 
 ## Contributing
 

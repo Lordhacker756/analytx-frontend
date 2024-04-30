@@ -9,45 +9,32 @@ import {
 } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { SearchEngineQuestionnareDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const SearchEngineQuestionnare = () => {
-  const [internName, setInternName] = useState("");
-  const [rating1, setRating1] = useState("");
-  const [rating2, setRating2] = useState("");
-  const [rating3, setRating3] = useState("");
-  const [URL, setURL] = useState("");
-  const [remark, setRemark] = useState("");
+  const [formData, setFormData] = useState<SearchEngineQuestionnareDTO>({
+    internName: "",
+    rating1: 0,
+    rating2: 0,
+    rating3: 0,
+    URL: "",
+    remark: "",
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Convert data to DTO format
-    const data = {
-      internName,
-      rating1: parseFloat(rating1),
-      rating2: parseFloat(rating2),
-      rating3: parseFloat(rating3),
-      URL,
-      remark,
-    };
-    console.log(data);
-    // Submit data to endpoint
-    const authToken = localStorage.getItem("authToken");
-    fetch(
-      "http://localhost:8080/api/v1/user/submit-search-engine-questionnaire",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(data),
-      }
-    )
+
+    console.log(formData);
+    axiosInstance
+      .post("user/submit-search-engine-questionnaire", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -57,24 +44,6 @@ export const SearchEngineQuestionnare = () => {
         console.error("Error:", error);
       });
   };
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -96,7 +65,14 @@ export const SearchEngineQuestionnare = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -123,7 +99,14 @@ export const SearchEngineQuestionnare = () => {
               </Label>
               <Select
                 id="responsibility-rating"
-                onValueChange={(value) => setRating1(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -150,7 +133,14 @@ export const SearchEngineQuestionnare = () => {
               </Label>
               <Select
                 id="research-skills-rating"
-                onValueChange={(value) => setRating2(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating2: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -177,7 +167,14 @@ export const SearchEngineQuestionnare = () => {
               </Label>
               <Select
                 id="quality-of-work-rating"
-                onValueChange={(value) => setRating3(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating3: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -205,8 +202,15 @@ export const SearchEngineQuestionnare = () => {
               <input
                 type="text"
                 id="URL"
-                value={URL}
-                onChange={(e) => setURL(e.target.value)}
+                value={formData.URL}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      URL: e.target.value,
+                    };
+                  })
+                }
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
                 placeholder="Enter URL"
               />
@@ -218,8 +222,15 @@ export const SearchEngineQuestionnare = () => {
               <Textarea
                 className="bg-gray-800 text-gray-50"
                 id="remark"
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
+                value={formData.remark}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      remark: e.target.value,
+                    };
+                  })
+                }
                 placeholder="Enter your remarks"
                 rows={3}
               />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label.tsx";
 import {
   Select,
@@ -9,37 +9,29 @@ import {
 } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { GoogleSpreadsheetDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const GoogleSpreadsheet = () => {
-  const [internName, setInternName] = useState("");
-  const [rating1, setRating1] = useState("");
-  const [URL, setURL] = useState("");
-  const [remark, setRemark] = useState("");
+  const [formData, setFormData] = useState<GoogleSpreadsheetDTO>({
+    internName: "",
+    rating1: 0,
+    URL: "",
+    remark: "",
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Convert data to DTO format
-    const data = {
-      internName,
-      rating1: parseFloat(rating1),
-      URL,
-      remark,
-    };
-    const authToken = localStorage.getItem("authToken");
-    // Submit data to endpoint
-    fetch("http://localhost:8080/api/v1/user/submit-google-spreadsheet", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+
+    axiosInstance
+      .post("user/submit-google-spreadsheet", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -49,24 +41,6 @@ export const GoogleSpreadsheet = () => {
         console.error("Error:", error);
       });
   };
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -88,7 +62,14 @@ export const GoogleSpreadsheet = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -115,7 +96,14 @@ export const GoogleSpreadsheet = () => {
               </Label>
               <Select
                 id="ability-to-learn-rating"
-                onValueChange={(value) => setRating1(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -143,8 +131,15 @@ export const GoogleSpreadsheet = () => {
               <input
                 type="text"
                 id="URL"
-                value={URL}
-                onChange={(e) => setURL(e.target.value)}
+                value={formData.URL}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      URL: e.target.value,
+                    };
+                  })
+                }
                 className="bg-gray-800 text-gray-50 w-full p-2 rounded"
                 placeholder="Enter URL"
               />
@@ -156,8 +151,15 @@ export const GoogleSpreadsheet = () => {
               <Textarea
                 className="bg-gray-800 text-gray-50"
                 id="remark"
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
+                value={formData.remark}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      remark: e.target.value,
+                    };
+                  })
+                }
                 placeholder="Enter your remarks"
                 rows={3}
               />

@@ -7,33 +7,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { PersonalityDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { personalityTypeOptions } from "@/constants/personalityTypeOptions";
 
 export const PersonalityType = () => {
-  const [internName, setInternName] = useState("");
-  const [personalityType, setPersonalityType] = useState("");
+  const [formData, setFormData] = useState<PersonalityDTO>({
+    internName: "",
+    personalityType: "",
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = {
-      internName,
-      personalityType,
-    };
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-personality-type", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+
+    axiosInstance
+      .post("user/submit-personality-type", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -43,20 +38,6 @@ export const PersonalityType = () => {
         console.error("Error:", error);
       });
   };
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
-  const personalityTypeOptions = [
-    { value: "Type 1", label: "Type 1" },
-    { value: "Type 2", label: "Type 2" },
-    { value: "Type 3", label: "Type 3" },
-    { value: "Type 4", label: "Type 4" },
-    { value: "Type 5", label: "Type 5" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -78,7 +59,14 @@ export const PersonalityType = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -105,7 +93,14 @@ export const PersonalityType = () => {
               </Label>
               <Select
                 id="personality-type"
-                onValueChange={(value) => setPersonalityType(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      personalityType: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue

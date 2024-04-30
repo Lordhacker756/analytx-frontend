@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-image": "docker build --pull --rm -f \"Dockerfile\" -t rudra708/analytx-frontend:latest \".\"",
+    "docker-push": "docker push rudra708/analytx-frontend:latest"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.0.2",

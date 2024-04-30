@@ -7,33 +7,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { AttendanceDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const Attendance = () => {
-  const [internName, setInternName] = useState("");
-  const [rating1, setRating1] = useState("");
+  const [formData, setFormData] = useState<AttendanceDTO>({
+    internName: "",
+    rating1: 0,
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = {
-      internName,
-      rating1: parseFloat(rating1),
-    };
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-attendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+
+    axiosInstance
+      .post("user/submit-attendance", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -43,24 +38,6 @@ export const Attendance = () => {
         console.error("Error:", error);
       });
   };
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -79,7 +56,14 @@ export const Attendance = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -106,7 +90,14 @@ export const Attendance = () => {
               </Label>
               <Select
                 id="attendance-rating"
-                onValueChange={(value) => setRating1(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue

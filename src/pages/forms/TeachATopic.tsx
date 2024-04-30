@@ -10,6 +10,9 @@ import {
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { TeachATopicDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const TeachATopic = () => {
   const [formData, setFormData] = useState<TeachATopicDTO>({
@@ -22,23 +25,16 @@ export const TeachATopic = () => {
     remark: "",
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
 
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-teach-a-topic", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(formData),
-    })
+    axiosInstance
+      .post("user/submit-teach-a-topic", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -48,24 +44,6 @@ export const TeachATopic = () => {
         console.error("Error:", error);
       });
   };
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -121,7 +99,7 @@ export const TeachATopic = () => {
                   setFormData((data) => {
                     return {
                       ...data,
-                      rating1: value,
+                      rating1: +value,
                     };
                   })
                 }
@@ -152,7 +130,7 @@ export const TeachATopic = () => {
               <Select
                 id="rating2"
                 onValueChange={(value) =>
-                  setFormData((data) => ({ ...data, rating2: value }))
+                  setFormData((data) => ({ ...data, rating2: +value }))
                 }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
@@ -181,7 +159,7 @@ export const TeachATopic = () => {
               <Select
                 id="rating3"
                 onValueChange={(value) =>
-                  setFormData((data) => ({ ...data, rating3: value }))
+                  setFormData((data) => ({ ...data, rating3: +value }))
                 }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
@@ -212,7 +190,7 @@ export const TeachATopic = () => {
                 onValueChange={(value) =>
                   setFormData((data) => ({
                     ...data,
-                    rating4: value,
+                    rating4: +value,
                   }))
                 }
               >

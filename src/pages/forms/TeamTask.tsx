@@ -10,42 +10,31 @@ import {
 } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { TeamTaskDTO } from "@/types/FormDTO";
+import axiosInstance from "@/api/host";
+import { internOptions } from "@/constants/internOptions";
+import { ratingOptions } from "@/constants/ratingOptions";
 
 export const TeamTask = () => {
-  const [internName, setInternName] = useState("");
-  const [researchSkills, setResearchSkills] = useState("");
-  const [qualityOfWork, setQualityOfWork] = useState("");
-  const [communicationSkills, setCommunicationSkills] = useState("");
-  const [planningAndProblemSolving, setPlanningAndProblemSolving] =
-    useState("");
-  const [URL, setURL] = useState("");
-  const [remark, setRemark] = useState("");
+  const [formData, setFormData] = useState<TeamTaskDTO>({
+    internName: "",
+    rating1: 0,
+    rating2: 0,
+    rating3: 0,
+    rating4: 0,
+    URL: "",
+    remark: "",
+  });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    const data = {
-      internName,
-      rating1: parseFloat(researchSkills),
-      rating2: parseFloat(qualityOfWork),
-      rating3: parseFloat(communicationSkills),
-      rating4: parseFloat(planningAndProblemSolving),
-      URL,
-      remark,
-    };
-    const authToken = localStorage.getItem("authToken");
-    fetch("http://localhost:8080/api/v1/user/submit-team-task", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(data),
-    })
+    axiosInstance
+      .post("user/submit-team-task", formData)
       .then((response) => {
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
+        return response.data;
       })
       .then((data) => {
         console.log("Success:", data);
@@ -55,24 +44,6 @@ export const TeamTask = () => {
         console.error("Error:", error);
       });
   };
-
-  const internOptions = [
-    { value: "A", label: "A" },
-    { value: "B", label: "B" },
-    { value: "C", label: "C" },
-  ];
-
-  const ratingOptions = [
-    { value: "1", label: "1 Star" },
-    { value: "1.5", label: "1.5 Stars" },
-    { value: "2", label: "2 Stars" },
-    { value: "2.5", label: "2.5 Stars" },
-    { value: "3", label: "3 Stars" },
-    { value: "3.5", label: "3.5 Stars" },
-    { value: "4", label: "4 Stars" },
-    { value: "4.5", label: "4.5 Stars" },
-    { value: "5", label: "5 Stars" },
-  ];
 
   return (
     <div className="flex-1 p-6 md:p-10 bg-gray-900">
@@ -92,7 +63,14 @@ export const TeamTask = () => {
               </Label>
               <Select
                 id="intern-name"
-                onValueChange={(value) => setInternName(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      internName: value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -119,7 +97,14 @@ export const TeamTask = () => {
               </Label>
               <Select
                 id="research-skills"
-                onValueChange={(value) => setResearchSkills(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating1: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -146,7 +131,14 @@ export const TeamTask = () => {
               </Label>
               <Select
                 id="quality-of-work"
-                onValueChange={(value) => setQualityOfWork(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating2: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -173,7 +165,48 @@ export const TeamTask = () => {
               </Label>
               <Select
                 id="communication-skills"
-                onValueChange={(value) => setCommunicationSkills(value)}
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating3: +value,
+                    };
+                  })
+                }
+              >
+                <SelectTrigger className="bg-gray-800 text-gray-50">
+                  <SelectValue
+                    className="text-gray-50"
+                    placeholder="Select communication skills"
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-800 text-gray-50">
+                  {ratingOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      className="hover:bg-gray-700"
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-gray-50" htmlFor="communication-skills">
+                NO idea
+              </Label>
+              <Select
+                id="communication-skills"
+                onValueChange={(value) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      rating4: +value,
+                    };
+                  })
+                }
               >
                 <SelectTrigger className="bg-gray-800 text-gray-50">
                   <SelectValue
@@ -204,8 +237,15 @@ export const TeamTask = () => {
                 type="text"
                 className="bg-gray-800 text-gray-50 w-full px-3 py-2 rounded-md"
                 placeholder="Enter URL"
-                value={URL}
-                onChange={(e) => setURL(e.target.value)}
+                value={formData.URL}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      URL: e.target.value,
+                    };
+                  })
+                }
               />
             </div>
             {/* New Textarea for Remark */}
@@ -217,8 +257,15 @@ export const TeamTask = () => {
                 id="remark"
                 className="bg-gray-800 text-gray-50 w-full rounded-md"
                 placeholder="Enter remark"
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
+                value={formData.remark}
+                onChange={(e) =>
+                  setFormData((data) => {
+                    return {
+                      ...data,
+                      remark: e.target.value,
+                    };
+                  })
+                }
               />
             </div>
             <Button
