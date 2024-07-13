@@ -2,6 +2,7 @@
 ## The perfect frontend interface for Analytx - the collective intern analysis tool!
 
 Analytx Frontend provides a user-friendly interface for interacting with the Analytx backend system. It allows employees to seamlessly rate interns across various domains, view detailed reports, and manage intern evaluations with ease.
+Checkout the backend code here: https://github.com/Lordhacker756/analytx
 
 ## Features
 
